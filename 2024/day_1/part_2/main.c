@@ -24,6 +24,26 @@ int compare(const void* a, const void* b){
 
 
 /**
+ * \brief returns the amount of times the number occurs in the array
+ * \param number number to look for
+ * \param array array to look for the number in
+ * \param length length of the array
+ * \return amount of times the number was found in the array
+ */
+int count_occurrences(int number, int array[], int length){
+    int count = 0;
+
+    for(int i = 0; i < length; i++){
+        if(number == array[i]){
+            count ++;
+        }
+    }
+
+    return count;
+}
+
+
+/**
  * Main function
  */
 int main(int argc, char *argv[]){
@@ -50,7 +70,7 @@ int main(int argc, char *argv[]){
 
     // go through the arrays and compare the numbers
     for(int i = 0; i < lines; i++){
-        sum += abs(array_1[i] - array_2[i]);
+        sum += abs(array_1[i] * count_occurrences(array_1[i], array_2, lines));
     }
 
     printf("%d\n", sum);
