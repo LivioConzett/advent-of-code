@@ -11,11 +11,11 @@
  * \param height height of array
  * \param width width of array
  */
-void clear_array(int* array, int height, int width){
+void clear_array(char* array, int height, int width){
 
     for(int i = 0; i < height; i++){
         for(int ii = 0; ii < width; ii++){
-            array[(i * height) + ii] = ii;
+            array[(i * height) + ii] = 'a';
         }
     }
 }
@@ -26,11 +26,11 @@ void clear_array(int* array, int height, int width){
  * \param height height of array
  * \param width width of array
  */
-void print_array(int* array, int height, int width){
+void print_array(char* array, int height, int width){
 
     for(int i = 0; i < height; i++){
         for(int ii = 0; ii < width; ii++){
-            printf("%d ",array[(i * height) + ii]);
+            printf("%c",array[(i * height) + ii]);
         }
         printf("\n");
     }
@@ -50,11 +50,17 @@ int main(int argc, char* argv[]){
     
     printf("%d:%d\n", height, width);
 
-    int main_array[height][width];
+    char main_array[height][width];
 
     clear_array(main_array, height, width);
 
+    read_file_to_array(main_array, width, height, filename);
+
     print_array(main_array, height, width);
+
+    
+
+
 
     return 0;
 

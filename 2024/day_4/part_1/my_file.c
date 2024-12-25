@@ -67,10 +67,10 @@ int amount_of_columns(char* filename){
         read = getline(&line, &len, file_ptr);
         if(read == -1) break;
         
-        if(strlen(line) > max_column) max_column = strlen(line);
+        // minus one because of the newline character we don't want 
+        if(strlen(line)-1 > max_column) max_column = strlen(line)-1;
 
     }
-
 
     // close the file
     fclose(file_ptr);
@@ -86,17 +86,12 @@ int amount_of_columns(char* filename){
  * \param length length of the array
  * \param border border around the array
  */
-static void line_to_array(char* line, int array[], int length, int border){
+static void line_to_array(char* line, char* array, int length){
 
     int string_length = strlen(line);
 
-    for(int i = border; i < string_length; i++){
-
-        // make sure we don't write outside of the array
-        if(i > length - border) break;
-
-        array[i] = line[i-border];
-
+    for(int i = 0; i < length; i++){
+        array[i] = line[i];
     }
 
 }
@@ -105,7 +100,7 @@ static void line_to_array(char* line, int array[], int length, int border){
 /**
  * See header file
  */
-void read_file_to_array(int* array, int width, int height, int border, char* filename){
+void read_file_to_array(char* array, int width, int height, char* filename){
     
     // opent the file
     FILE* file_ptr;
@@ -121,13 +116,13 @@ void read_file_to_array(int* array, int width, int height, int border, char* fil
     char* line = NULL;
     size_t len = 0;
 
-    int array_counter = border;
+    int array_counter = 0;
 
     while(read != -1){
         read = getline(&line, &len, file_ptr);
         if(read == -1) break;
-        
-        line_to_array(line, &array[array_counter], width, border);
+
+        line_to_array(line, array+array_counter*width, width);
         array_counter++;
     }   
 

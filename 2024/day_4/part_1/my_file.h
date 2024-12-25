@@ -23,10 +23,9 @@ int amount_of_columns(char* filename);
  * \param array array to writ the values into
  * \param width width of the array
  * \param height height of the array
- * \param border size of the border around the array
  * \param filename string of the file name
  */
-void read_file_to_array(int* array, int width, int height, int border, char* filename);
+void read_file_to_array(char* array, int width, int height, char* filename);
 
 
 
