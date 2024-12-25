@@ -13,7 +13,7 @@
  * \param width width of array
  */
 void clear_array(char* array, int height, int width){
-
+    
     for(int i = 0; i < height; i++){
         for(int ii = 0; ii < width; ii++){
             array[(i * height) + ii] = 'a';
@@ -48,38 +48,25 @@ void print_array(char* array, int height, int width){
  */
 int check_around_field(char* array, int width, int height, int x, int y){
 
-    int found_count = 0;
-    int found = 1;
-    char* find = "XMAS";
-    int find_length = strlen(find);
-                    // N  NE  E  SE S  SW  W   NW
-    int x_offset[] = { 0,  1, 1, 1, 0, -1, -1, -1}; 
-    int y_offset[] = {-1, -1, 0, 1, 1,  1,  0, -1}; 
+    int found = 0;
+    
+    // check for out of bounds
+    if(x - 1 < 0 || x + 1 >= width || y - 1 < 0 || y + 1 >= height) return 0;
 
-    for(int pos = 0; pos < 8; pos++){
-        for(int i = 0; i < find_length; i++){
-            // don't go out of bound
-            if((x + x_offset[pos]*i < 0) || (x + x_offset[pos]*i > width)){
-                found = 0;
-                break;
-            }
-            if((y + y_offset[pos]*i < 0) || (y + y_offset[pos]*i > height)){
-                found = 0;
-                break;
-            }
+    // NW - SE
+    if(array[((y - 1) * width) + (x - 1)] == 'M' && array[((y + 1) * width) + (x + 1)] == 'S') found++;
+    // SE - NW
+    if(array[((y + 1) * width) + (x + 1)] == 'M' && array[((y - 1) * width) + (x - 1)] == 'S') found++;
 
-            // check the field in the direction that the pos index gives
-            if(array[ ((y + (y_offset[pos]*i)) * width) + (x + (x_offset[pos]*i)) ] != find[i]){
-                found = 0;
-                break;
-            }
-        }
+    // NE - SW
+    if(array[((y - 1) * width) + (x + 1)] == 'M' && array[((y + 1) * width) + (x - 1)] == 'S') found++;
+    // SW - NE
+    if(array[((y + 1) * width) + (x - 1)] == 'M' && array[((y - 1) * width) + (x + 1)] == 'S') found++;
 
-        if(found) found_count++;
-        found = 1;
-    }
 
-    return found_count;
+    if(found >= 2) return 1;
+
+    return 0;
 }
 
 
@@ -108,7 +95,7 @@ int main(int argc, char* argv[]){
     for(int i = 0; i < height; i++){
         for(int ii = 0; ii < width; ii++){
             
-            if(main_array[i][ii] == 'X'){
+            if(main_array[i][ii] == 'A'){
                 xmas_counter += check_around_field(main_array, width, height, ii, i);
             }
         }
