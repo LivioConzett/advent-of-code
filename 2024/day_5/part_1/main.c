@@ -3,15 +3,18 @@
 #include <stdlib.h>
 
 #include "linked.h"
+#include "my_file.h"
 
 
 int main(int argc, char* argv[]){
 
     char* filename = argv[1];
 
-    node_t* start = create_node(0);
+    node_t* start = create_list();
 
-    init_list(start);
+    node_t* zero = create_node(0);
+
+    append_node(start, zero);
 
     node_t* one = create_node(1);
 
@@ -20,6 +23,10 @@ int main(int argc, char* argv[]){
     node_t* two = create_node(2);
 
     append_node(start, two);
+
+    node_t* three = create_node(3);
+
+    insert_node(start, three, 4);
 
     print_list(start);
 
