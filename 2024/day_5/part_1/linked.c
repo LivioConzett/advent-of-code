@@ -7,25 +7,31 @@
  */
 node_t* create_list(){
 
-    node_t* start = create_node(0);
+    char* data = (char*) malloc(sizeof(char));
+    if (data == NULL) {
+        printf("malloc failed\n");
+        exit(-1);
+    }
 
-    start->next = start;
-    start->previous = start;
+    node_t* anchor = create_node(data);
 
-    return start;
+    anchor->next = anchor;
+    anchor->previous = anchor;
+
+    return anchor;
 }
 
 /**
  * See header
  */
-node_t* create_node(int number){
+node_t* create_node(void* data){
 
     node_t* node = (node_t*) malloc(sizeof(node_t));
     if (node == NULL) {
         printf("malloc failed\n");
         exit(-1);
     }
-    node->number = number;
+    node->data = data;
 
     return node;
 }
@@ -34,15 +40,14 @@ node_t* create_node(int number){
 /**
  * See header file
  */
-void append_node(node_t* start, node_t* to_append){
+void append_node(node_t* anchor, node_t* to_append){
 
-    node_t* head = start->next;
+    node_t* head = anchor;
 
     // find the end
-    while(head->next != start){
+    while(head->next != anchor){
         head = head->next;
     }
-
 
     to_append->next = head->next;
     to_append->previous = head;
@@ -61,19 +66,19 @@ void append_node(node_t* start, node_t* to_append){
 /**
  * See header file
  */
-void insert_node(node_t* start, node_t* to_insert, int index){
+void insert_node(node_t* anchor, node_t* to_insert, int index){
 
     // if the index is too great, just append the node
-    if(index > list_length(start)){
-        append_node(start, to_insert);
+    if(index > list_length(anchor)){
+        append_node(anchor, to_insert);
         return;
     }
 
-    node_t* head = start->next;
+    node_t* head = anchor->next;
     int node_counter = 0;
 
     // find the end
-    while(head->next != start && node_counter < index){
+    while(head->next != anchor && node_counter < index){
         head = head->next;
         node_counter++;
     }
@@ -90,13 +95,13 @@ void insert_node(node_t* start, node_t* to_insert, int index){
 /**
  * See header file
  */
-int list_length(node_t* start){
+int list_length(node_t* anchor){
 
-    node_t* head = start->next;
+    node_t* head = anchor;
 
     int counter = 0;
 
-    while(head->next != start){
+    while(head->next != anchor){
         head = head->next;
         counter++;
     }
@@ -107,17 +112,17 @@ int list_length(node_t* start){
 /**
  * See header file
  */
-int get_index_of(node_t* start, int number){
+int get_index_of(node_t* anchor, void* data){
     
-    node_t* head = start->next;
+    node_t* head = anchor->next;
 
     int counter = 0;
     int index = -1;
 
     // Go through the list.
-    while(head->next != start){
+    while(head->next != anchor){
         
-        if(head->number == number){
+        if(head->data == data){
             index = counter;
             break;
         }
@@ -127,27 +132,11 @@ int get_index_of(node_t* start, int number){
     }
 
     // incase it's the last one in the list
-    if(head->number == number) index = counter;
+    if(head->data == data) index = counter;
 
     return index;
 }
 
 
-/**
- * See header file
- */
-void print_list(node_t* start){
-
-    node_t* head = start->next;
-
-    // Go through the list.
-    while(head->next != start){
-
-        printf("%d\n", head->number);
-        head = head->next;
-    }
-
-    printf("%d\n", head->number);
-}
 
 

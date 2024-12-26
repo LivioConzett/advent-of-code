@@ -4,31 +4,25 @@
 
 #include "linked.h"
 #include "my_file.h"
+#include "topo.h"
+
 
 
 int main(int argc, char* argv[]){
 
     char* filename = argv[1];
 
-    node_t* start = create_list();
+    topo_node_t* topo = create_topo_node();
 
-    node_t* zero = create_node(0);
+    add_dependency(topo, 1);
+    add_dependency(topo, 2);
+    add_dependency(topo, 3);
+    add_dependency(topo, 4);
 
-    append_node(start, zero);
+    print_dependencies(topo);
+    printf("length: %d\n", list_length(topo->depends_on));
 
-    node_t* one = create_node(1);
 
-    append_node(start, one);
-
-    node_t* two = create_node(2);
-
-    append_node(start, two);
-
-    node_t* three = create_node(3);
-
-    insert_node(start, three, 4);
-
-    print_list(start);
 
     return 0;
 }
