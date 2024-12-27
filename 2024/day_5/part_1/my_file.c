@@ -5,12 +5,13 @@
 
 #include "my_file.h"
 #include "linked.h"
+#include "topo.h"
 
 
 /**
  * See header file
  */
-lnk_node_t* create_sort_list(char* filename){
+lnk_node_t* f_create_dependency_tree(char* filename){
 
     // opent the file
     FILE* file_ptr;
@@ -69,7 +70,24 @@ lnk_node_t* create_sort_list(char* filename){
             counter++;
         }
 
-        printf("%s : %s\n", first_num, second_num);
+        // printf("%s : %s\n", first_num, second_num);
+
+        int number_1 = atoi(first_num);
+        int number_2 = atoi(second_num);
+
+        // check if the already exists
+        int index = tp_find_index_of_data(list, number_2);
+
+        if(index < 0){
+            tp_node_t* node = tp_create_node(number_2);
+            tp_add_dependency(node, number_1);
+            lnk_append_data(list, node);
+        }
+        else{
+            tp_node_t* node = (tp_node_t*)lnk_get_data_at_index(list, index);
+            tp_add_dependency(node,number_1);
+        }
+
 
     }
 

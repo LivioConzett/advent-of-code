@@ -58,5 +58,20 @@ int tp_amount_of_dependencies(tp_node_t* anchor);
  */
 void tp_print_list(lnk_node_t* anchor);
 
+/**
+ * \brief get the index of the node with the number
+ * \param anchor list to check
+ * \param number the number to find
+ * \return index of the node with the number, -1 if nothing found
+ */
+int tp_find_index_of_data(lnk_node_t* anchor, int number);
+
+/**
+ * \brief find the first node on which no other node depends on 
+ * \param list list to search
+ * \return 0 if none were found, else pointer to the node
+ */
+tp_node_t* tp_find_leaf(lnk_node_t* list);
+
 
 #endif
