@@ -183,13 +183,13 @@ void* lnk_get_data_at_index(lnk_node_t* anchor, int index){
 /**
  * See header
  */
-void lnk_do_on_each_node(lnk_node_t* anchor, void(*function)(void*)){
+void lnk_do_on_each_node(lnk_node_t* anchor, void(*function)(void*, void*), void* additional){
 
     lnk_node_t* head = anchor;
 
     while(head->next != anchor){
         head = head->next;
-        function(head->data);
+        function(head->data, additional);
     }
 }
 

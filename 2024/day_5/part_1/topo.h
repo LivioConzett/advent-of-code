@@ -18,7 +18,6 @@ struct tp_node_t{
  */
 tp_node_t* tp_create_node(int number);
 
-
 /**
  * \brief print the dependancies of a topo node
  * \param anchor the node to print the dependancies from
@@ -36,13 +35,28 @@ void tp_add_dependency(tp_node_t* anchor, int dependent_on);
 /**
  * \brief remove a dependency from the node
  * \param anchor node to remove the dependency from
+ * \param dependent_remove number to remove from the dependencies
  */
-void tp_remove_dependency(tp_node_t* anchor, int dependent_remove);
+void tp_remove_dependency_from_node(tp_node_t* anchor, int dependent_remove);
+
+/**
+ * \brief remove a dependency from all the nodes in a list
+ * \param anchor list to remove from
+ * \param dependent_remove number to remove from the dependencies
+ */
+void tp_remove_dependency_from_list(lnk_node_t* anchor, int dependent_remove);
 
 /**
  * \brief get the amount of dependencies of a node
  * \return amount of dependencies
  */
 int tp_amount_of_dependencies(tp_node_t* anchor);
+
+/**
+ * \brief Print out the list of topo nodes
+ * \param anchor list to print out
+ */
+void tp_print_list(lnk_node_t* anchor);
+
 
 #endif

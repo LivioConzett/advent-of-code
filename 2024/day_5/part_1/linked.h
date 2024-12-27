@@ -84,8 +84,9 @@ void* lnk_get_data_at_index(lnk_node_t* anchor, int index);
  * \brief Takes a function and does this on every node in the list
  * \param anchor list to use
  * \param function the function to do on each node
+ * \param additional additional value to give the function
  */
-void lnk_do_on_each_node(lnk_node_t* anchor, void(*function)(void*));
+void lnk_do_on_each_node(lnk_node_t* anchor, void(*function)(void*, void*), void* additional);
 
 /**
  * \brief find a node according to a function

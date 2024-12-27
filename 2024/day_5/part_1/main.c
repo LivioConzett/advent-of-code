@@ -22,22 +22,36 @@ int main(int argc, char* argv[]){
 
     char* filename = argv[1];
 
-    tp_node_t* topo = tp_create_node(1);
+    lnk_node_t* list = lnk_create_list();
 
-    tp_add_dependency(topo, 1);
-    tp_add_dependency(topo, 2);
-    tp_add_dependency(topo, 3);
-    tp_add_dependency(topo, 4);
-    tp_add_dependency(topo, 5);
+    tp_node_t* topo_1 = tp_create_node(1);
 
-    tp_print_dependencies(topo);
-    printf("\nlength: %d\n", lnk_list_length(topo->depends_on));
+    tp_add_dependency(topo_1, 1);
+    tp_add_dependency(topo_1, 2);
+    tp_add_dependency(topo_1, 3);
+    tp_add_dependency(topo_1, 4);
+    tp_add_dependency(topo_1, 5);
 
-    tp_remove_dependency(topo, 3);
-    tp_print_dependencies(topo);
+    lnk_append_data(list, topo_1);
 
+    tp_remove_dependency_from_node(topo_1, 3);
 
+    tp_node_t* topo_2 = tp_create_node(2);
 
+    tp_add_dependency(topo_2, 69);
+    tp_add_dependency(topo_2, 420);
+    tp_add_dependency(topo_2, 2);
+
+    lnk_append_data(list, topo_2);
+
+    tp_print_list(list);
+
+    printf("---\n");
+
+    tp_remove_dependency_from_list(list, 2);
+
+    tp_print_list(list);
+    
     printf("\n");
     return 0;
 }
