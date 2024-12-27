@@ -22,61 +22,22 @@ int main(int argc, char* argv[]){
 
     char* filename = argv[1];
 
-    // topo_node_t* topo = create_topo_node();
+    tp_node_t* topo = tp_create_node(1);
 
-    // add_dependency(topo, 1);
-    // add_dependency(topo, 2);
-    // add_dependency(topo, 3);
-    // add_dependency(topo, 4);
+    tp_add_dependency(topo, 1);
+    tp_add_dependency(topo, 2);
+    tp_add_dependency(topo, 3);
+    tp_add_dependency(topo, 4);
+    tp_add_dependency(topo, 5);
 
-    // print_dependencies(topo);
-    // printf("length: %d\n", list_length(topo->depends_on));
+    tp_print_dependencies(topo);
+    printf("\nlength: %d\n", lnk_list_length(topo->depends_on));
 
-    int one = 1;
-    int two = 2;
-    int three = 3;
-    int four = 4;
-    int five = 5;
-    int six = 6;
-    int seven = 7;
-    int eight = 8;
-    int nine = 9;
-    int ten = 10;
-    int eleven = 11;
-
-    lnk_node_t* list = lnk_create_list();
+    tp_remove_dependency(topo, 3);
+    tp_print_dependencies(topo);
 
 
-    lnk_append_data(list, &one);
-    lnk_append_data(list, &two);
-    lnk_append_data(list, &three);
-    lnk_append_data(list, &four);
-    lnk_append_data(list, &five);
-    lnk_append_data(list, &six);
-    lnk_append_data(list, &seven);
-    lnk_append_data(list, &eight);
-    lnk_append_data(list, &nine);
-    lnk_append_data(list, &ten);
 
-
-    lnk_do_on_each_node(list, print_node);
-
-    int index = lnk_find_index_of_data(list, find, &six);
-
-    printf("index: %d\n", index);
-
-    lnk_delete_node_at(list, index);
-
-    lnk_do_on_each_node(list, print_node);
-
-    printf("======\n");
-
-    lnk_insert_data(list, &eleven, 6);
-
-    lnk_do_on_each_node(list, print_node);
-
-    printf("data: %d\n", *(int*)lnk_get_data_at_index(list, 9));
-    printf("index: %d\n", lnk_find_index_of_data_pointer(list, &two));
-
+    printf("\n");
     return 0;
 }

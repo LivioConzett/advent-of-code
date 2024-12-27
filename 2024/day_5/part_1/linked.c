@@ -160,7 +160,6 @@ int lnk_find_index_of_data_pointer(lnk_node_t* anchor, void* data){
  */
 void* lnk_get_data_at_index(lnk_node_t* anchor, int index){
 
-
     lnk_node_t* head = anchor;
 
     int counter = 0;
@@ -192,7 +191,6 @@ void lnk_do_on_each_node(lnk_node_t* anchor, void(*function)(void*)){
         head = head->next;
         function(head->data);
     }
-
 }
 
 /**
