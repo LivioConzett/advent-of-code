@@ -75,6 +75,7 @@ int main(int argc, char* argv[]){
 
     lnk_do_on_each_node(list, print_node);
 
+    lnk_delete_list(list);
 
     return 0;
 }
