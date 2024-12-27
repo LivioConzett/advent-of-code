@@ -10,7 +10,7 @@
 /**
  * See header file
  */
-node_t* create_sort_list(char* filename){
+lnk_node_t* create_sort_list(char* filename){
 
     // opent the file
     FILE* file_ptr;
@@ -23,7 +23,7 @@ node_t* create_sort_list(char* filename){
     }
 
     // create the list
-    node_t* list = create_list();
+    lnk_node_t* list = lnk_create_list();
 
     size_t read = 0;
     char* line = NULL;

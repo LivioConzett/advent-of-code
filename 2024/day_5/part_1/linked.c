@@ -5,7 +5,7 @@
 /**
  * See header file
  */
-node_t* create_list(){
+lnk_node_t* lnk_create_list(){
 
     char* data = (char*) malloc(sizeof(char));
     if (data == NULL) {
@@ -13,7 +13,7 @@ node_t* create_list(){
         exit(-1);
     }
 
-    node_t* anchor = create_node(data);
+    lnk_node_t* anchor = lnk_create_node(data);
 
     anchor->next = anchor;
     anchor->previous = anchor;
@@ -24,9 +24,9 @@ node_t* create_list(){
 /**
  * See header
  */
-node_t* create_node(void* data){
+lnk_node_t* lnk_create_node(void* data){
 
-    node_t* node = (node_t*) malloc(sizeof(node_t));
+    lnk_node_t* node = (lnk_node_t*) malloc(sizeof(lnk_node_t));
     if (node == NULL) {
         printf("malloc failed\n");
         exit(-1);
@@ -40,9 +40,9 @@ node_t* create_node(void* data){
 /**
  * See header file
  */
-void append_node(node_t* anchor, node_t* to_append){
+void lnk_append_node(lnk_node_t* anchor, lnk_node_t* to_append){
 
-    node_t* head = anchor;
+    lnk_node_t* head = anchor;
 
     // find the end
     while(head->next != anchor){
@@ -62,19 +62,30 @@ void append_node(node_t* anchor, node_t* to_append){
 }
 
 
+/**
+ * See header
+ */
+void lnk_append_data(lnk_node_t* anchor, void* data){
+
+    lnk_node_t* node = lnk_create_node(data);
+
+    lnk_append_node(anchor, node);
+
+}
+
 
 /**
  * See header file
  */
-void insert_node(node_t* anchor, node_t* to_insert, int index){
+void lnk_insert_node(lnk_node_t* anchor, lnk_node_t* to_insert, int index){
 
     // if the index is too great, just append the node
-    if(index > list_length(anchor)){
-        append_node(anchor, to_insert);
+    if(index > lnk_list_length(anchor)){
+        lnk_append_node(anchor, to_insert);
         return;
     }
 
-    node_t* head = anchor->next;
+    lnk_node_t* head = anchor->next;
     int node_counter = 0;
 
     // find the end
@@ -89,15 +100,25 @@ void insert_node(node_t* anchor, node_t* to_insert, int index){
     head->previous->next = to_insert;
     head->previous = to_insert;
 
-
 }
+
+/**
+ * See header
+ */
+void lnk_insert_data(lnk_node_t* anchor, void* data, int index){
+
+    lnk_node_t* node = lnk_create_node(data);
+
+    lnk_insert_node(anchor, node, index);
+}
+
 
 /**
  * See header file
  */
-int list_length(node_t* anchor){
+int lnk_list_length(lnk_node_t* anchor){
 
-    node_t* head = anchor;
+    lnk_node_t* head = anchor;
 
     int counter = 0;
 
@@ -112,9 +133,9 @@ int list_length(node_t* anchor){
 /**
  * See header file
  */
-int get_index_of(node_t* anchor, void* data){
+int lnk_get_index_of(lnk_node_t* anchor, void* data){
     
-    node_t* head = anchor->next;
+    lnk_node_t* head = anchor->next;
 
     int counter = 0;
     int index = -1;
@@ -137,6 +158,82 @@ int get_index_of(node_t* anchor, void* data){
     return index;
 }
 
+/**
+ * See header
+ */
+void lnk_do_on_each_node(lnk_node_t* anchor, void(*function)(void*)){
+
+    lnk_node_t* head = anchor;
+
+    while(head->next != anchor){
+        head = head->next;
+        function(head->data);
+    }
+
+}
+
+/**
+ * See header
+ */
+int lnk_find_node(lnk_node_t* anchor, int(*function)(void*, void*), void* additional){
+
+    lnk_node_t* head = anchor;
+
+    int counter = 0;
+
+    while(head->next != anchor){
+        head = head->next;
+        if(function(head->data, additional)) return counter;
+        counter ++;
+    }
+
+    return -1;
+}
+
+/**
+ * See header
+ */
+void lnk_delete_node_at(lnk_node_t* anchor, int index){
+
+    lnk_node_t* head = anchor;
+
+    int counter = 0;
+
+    while(head->next != anchor){
+        head = head->next;
+        if(counter == index){
+            
+            // unhook the head from the list
+            head->previous->next = head->next;
+            head->next->previous = head->previous;
+
+            // free the memory of the node
+            free(head);
+            return;
+        }
+        counter ++;
+    }
+}
 
 
+/**
+ * See header
+ */
+void lnk_delete_list(lnk_node_t* anchor){
+
+
+    lnk_node_t* current = anchor;
+    lnk_node_t* next;
+
+
+    while(current->next != anchor){
+
+        next = current->next;
+        free(current);
+        current = next;
+
+    }
+
+    free(current);
+}
 
