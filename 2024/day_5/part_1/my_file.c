@@ -88,6 +88,14 @@ lnk_node_t* f_create_dependency_tree(char* filename){
             tp_add_dependency(node,number_1);
         }
 
+        // add the other number also as a node
+        index = tp_find_index_of_data(list, number_1);
+        
+        if(index < 0){
+            tp_node_t* node = tp_create_node(number_1);
+            lnk_append_data(list, node);
+        }
+
 
     }
 

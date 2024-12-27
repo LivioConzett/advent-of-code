@@ -73,5 +73,9 @@ int tp_find_index_of_data(lnk_node_t* anchor, int number);
  */
 tp_node_t* tp_find_leaf(lnk_node_t* list);
 
+/**
+ * \brief delete a node including the dependencies
+ */
+void tp_delete_node(tp_node_t* node);
 
 #endif

@@ -18,7 +18,6 @@ tp_node_t* tp_create_node(int number){
     node->depends_on = lnk_create_list();
 
     return node;
-
 }
 
 /**
@@ -187,4 +186,30 @@ tp_node_t* tp_find_leaf(lnk_node_t* list){
 
     return 0;
 }
+
+
+/**
+ * \brief Free the memory of the data in the node
+ * \param data the node to clear the data from
+ */
+static void tp_free_dependency(void* data, void* ignore){
+    free(data);
+}
+
+
+/**
+ * See header
+ */
+void tp_delete_node(tp_node_t* node){
+
+    // free the dependencies
+    lnk_do_on_each_node(node->depends_on, tp_free_dependency, 0);
+
+    // delete the list itself
+    lnk_delete_list(node->depends_on);
+
+    // free the node
+    free(node);
+}
+
 

@@ -58,7 +58,6 @@ void lnk_append_node(lnk_node_t* anchor, lnk_node_t* to_append){
 
     // Set the next element to be the element to append.
     head->next = to_append;
-
 }
 
 
@@ -70,7 +69,6 @@ void lnk_append_data(lnk_node_t* anchor, void* data){
     lnk_node_t* node = lnk_create_node(data);
 
     lnk_append_node(anchor, node);
-
 }
 
 
@@ -99,7 +97,6 @@ void lnk_insert_node(lnk_node_t* anchor, lnk_node_t* to_insert, int index){
 
     head->previous->next = to_insert;
     head->previous = to_insert;
-
 }
 
 /**
