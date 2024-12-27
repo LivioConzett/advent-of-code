@@ -133,9 +133,9 @@ int lnk_list_length(lnk_node_t* anchor){
 /**
  * See header file
  */
-int lnk_get_index_of(lnk_node_t* anchor, void* data){
+int lnk_find_index_of_data_pointer(lnk_node_t* anchor, void* data){
     
-    lnk_node_t* head = anchor->next;
+    lnk_node_t* head = anchor;
 
     int counter = 0;
     int index = -1;
@@ -143,20 +143,43 @@ int lnk_get_index_of(lnk_node_t* anchor, void* data){
     // Go through the list.
     while(head->next != anchor){
         
+        head = head->next;
         if(head->data == data){
             index = counter;
             break;
         }
         
-        head = head->next;
         counter++;
     }
 
-    // incase it's the last one in the list
-    if(head->data == data) index = counter;
-
     return index;
 }
+
+/**
+ * See header
+ */
+void* lnk_get_data_at_index(lnk_node_t* anchor, int index){
+
+
+    lnk_node_t* head = anchor;
+
+    int counter = 0;
+
+    // Go through the list.
+    while(head->next != anchor){
+        head = head->next;
+        
+        if(counter == index){
+            return head->data;
+        }
+        
+        counter++;
+    }
+
+    return 0;
+}
+
+
 
 /**
  * See header
@@ -175,7 +198,7 @@ void lnk_do_on_each_node(lnk_node_t* anchor, void(*function)(void*)){
 /**
  * See header
  */
-int lnk_find_node(lnk_node_t* anchor, int(*function)(void*, void*), void* additional){
+int lnk_find_index_of_data(lnk_node_t* anchor, int(*function)(void*, void*), void* additional){
 
     lnk_node_t* head = anchor;
 

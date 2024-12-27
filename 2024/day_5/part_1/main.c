@@ -61,7 +61,7 @@ int main(int argc, char* argv[]){
 
     lnk_do_on_each_node(list, print_node);
 
-    int index = lnk_find_node(list, find, &six);
+    int index = lnk_find_index_of_data(list, find, &six);
 
     printf("index: %d\n", index);
 
@@ -75,7 +75,8 @@ int main(int argc, char* argv[]){
 
     lnk_do_on_each_node(list, print_node);
 
-    lnk_delete_list(list);
+    printf("data: %d\n", *(int*)lnk_get_data_at_index(list, 9));
+    printf("index: %d\n", lnk_find_index_of_data_pointer(list, &two));
 
     return 0;
 }

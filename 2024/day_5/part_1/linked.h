@@ -70,7 +70,15 @@ int lnk_list_length(lnk_node_t* anchor);
  * \param number number we are looking for
  * \return the index of the node, or -1 if not found
  */
-int lnk_get_index_of(lnk_node_t* anchor, void* data);
+int lnk_find_index_of_data_pointer(lnk_node_t* anchor, void* data);
+
+/**
+ * \brief Get the data at a certain index
+ * \param anchor list to get the data from
+ * \param index index in the list to get
+ * \return pointer to the data at the index, 0 if nothing was found
+ */
+void* lnk_get_data_at_index(lnk_node_t* anchor, int index);
 
 /**
  * \brief Takes a function and does this on every node in the list
@@ -86,7 +94,7 @@ void lnk_do_on_each_node(lnk_node_t* anchor, void(*function)(void*));
  * \param additional additional value to give the function
  * \return index of the node, -1 if nothing was found
  */
-int lnk_find_node(lnk_node_t* anchor, int(*function)(void*, void*), void* additional);
+int lnk_find_index_of_data(lnk_node_t* anchor, int(*function)(void*, void*), void* additional);
 
 /**
  * \brief Delete the node at index. Will not delete the data the node is pointing too.
@@ -94,7 +102,6 @@ int lnk_find_node(lnk_node_t* anchor, int(*function)(void*, void*), void* additi
  * \param index node at index to delete
  */
 void lnk_delete_node_at(lnk_node_t* anchor, int index);
-
 
 /**
  * \brief delete the list.
