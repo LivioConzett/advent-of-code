@@ -13,6 +13,8 @@ enum Characters{
     EMPTY = '.',
     BLOCK = '#',
     TOUCHED = 'x',
+    TRIED = '+',
+    OBSTACLE = 'O',
     UP = '^',
     DOWN = 'v',
     LEFT = '<',
@@ -64,9 +66,10 @@ vector_t get_position_of_guard(char* field, vector_t size);
  * \param field the field
  * \param size the size of the field
  * \param position the position of the guard
+ * \param mark_touched 1 the fields that are touched are marked, 0 they ar not
  * \return 1 if the guard left the field, else 0
  */
-int g_move(char* field, vector_t size, vector_t* position);
+int g_move(char* field, vector_t size, vector_t* position, int mark_touched);
 
 /**
  * \brief count the number of touched fields
@@ -75,5 +78,22 @@ int g_move(char* field, vector_t size, vector_t* position);
  * \return number of fields touched
  */
 int g_count_touched_fields(char* field, vector_t size);
+
+/**
+ * \brief place the guard back to his original place
+ * \param field field playing
+ * \param size size of the field
+ * \param position position to place the guard at
+ * \param guard character of the guard.
+ */
+void g_set_guard(char* field, vector_t size, vector_t position, char guard);
+
+/**
+ * \brief set an obstacle on a touched field.
+ * \param field field playing
+ * \param size size of the filed
+ * \return 1 if an obstacle was set, 0 if not (no more places to place an obstacle)
+ */
+int g_set_obstacle(char* field, vector_t size);
 
 #endif

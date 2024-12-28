@@ -5,6 +5,9 @@
 
 #include "guard.h"
 
+// bad global variable.
+// too lazy to fix for a simple Advent of Code.
+static char previous_field = TOUCHED;
 
 /**
  * See header
@@ -93,6 +96,8 @@ void g_fill_field(char* filename, char* field, vector_t size){
  */
 void g_print_field(char* field, vector_t size){
 
+    printf("\n");
+
     for(int y = 0; y < size.y; y++){
         for(int x = 0; x < size.x; x++){
             printf("%c",field[(y * size.x) + x]);
@@ -150,7 +155,7 @@ static enum Characters g_turn_90_deg_cw(enum Characters guard){
 /**
  * See header
  */
-int g_move(char* field, vector_t size, vector_t* position){
+int g_move(char* field, vector_t size, vector_t* position, int mark_touched){
 
     char guard = field[(position->y * size.x) + position->x];
     vector_t pos = *position;
@@ -177,6 +182,7 @@ int g_move(char* field, vector_t size, vector_t* position){
 
     // turn the guard if the next field is not empty
     char next = field[(pos.y * size.x) + pos.x];
+    previous_field = next;
     if(next == BLOCK){
         guard = g_turn_90_deg_cw(guard);
         // update the position of the guard in the field
@@ -186,7 +192,8 @@ int g_move(char* field, vector_t size, vector_t* position){
 
     // update the pos of the guard in the field.
     // clear the position of the guard
-    field[(position->y * size.x) + position->x] = TOUCHED;
+    if(mark_touched) field[(position->y * size.x) + position->x] = TOUCHED;
+    else field[(position->y * size.x) + position->x] = previous_field;
     // place the guard in the new position
     field[(pos.y * size.x) + pos.x] = guard;
 
@@ -215,5 +222,39 @@ int g_count_touched_fields(char* field, vector_t size){
     }
 
     return counter;
+}
+
+/**
+ * See header
+ */
+void g_set_guard(char* field, vector_t size, vector_t position, char guard){
+
+    vector_t old_pos = get_position_of_guard(field, size);
+
+    field[(old_pos.y * size.x) + old_pos.x] = TOUCHED;
+    field[(position.y * size.x) + position.x] = guard;
+
+}
+
+/**
+ * See header
+ */
+int g_set_obstacle(char* field, vector_t size){
+
+    //go through the field
+    for(int y = 0; y < size.y; y++){
+        for(int x = 0; x < size.x; x++){
+            char character = field[(y * size.x) + x];
+            if(character == OBSTACLE){
+                field[(y * size.x) + x] = TRIED;
+            }
+            
+            if(character == TOUCHED){
+                field[(y * size.x) + x] = OBSTACLE;
+                return 1;
+            }
+        }
+    }
+    return 0;
 }
 

@@ -29,17 +29,32 @@ int main(int argc, char* argv[]){
 
     // get the position of the guard
     vector_t position = get_position_of_guard(field, field_size);
+    
+    // needed to reset the pos of the guard
+    vector_t original_pos;
+    original_pos.x = position.x;
+    original_pos.y = position.y;
+
+    char original_guard = field[(original_pos.y * field_size.x) + original_pos.x];
+
 
     int left_field = 0;
 
     while(!left_field){
-
-        left_field = g_move(field, field_size, &position);
-
-        // printf("------------------\n");
-        // g_print_field(field, field_size);
+        left_field = g_move(field, field_size, &position, 1);
     }
 
-    printf("unique fields: %d\n", g_count_touched_fields(field, field_size));
+    // get the amount of touched fields
+    int amount_of_touched = g_count_touched_fields(field, field_size);
+
+    g_set_guard(field, field_size, original_pos, original_guard);
+
+    g_print_field(field, field_size);
+
+    for(int i = 0; i < 10; i++){
+        g_set_obstacle(field, field_size);
+
+        g_print_field(field, field_size);
+    }
 
 }
