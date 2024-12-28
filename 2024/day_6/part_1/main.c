@@ -2,7 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "file.h"
+#include "guard.h"
+
+
+
+
+
+
 
 /**
  * Main entry point
@@ -11,11 +17,24 @@ int main(int argc, char* argv[]){
 
     char* filename = argv[1];
 
-    int field_width = f_get_width_of_field(filename);
-    int field_height = f_get_height_of_filed(filename);
+    // int field_width = f_get_width_of_field(filename);
+    // int field_height = f_get_height_of_filed(filename);
+
+    vector_t field_size = g_get_size_of_field(filename);
+
+    // printf("%d : %d\n", size.x, size.y);
 
     // create the 2d array for the field
-    int field[field_width][field_height];
+    char field[field_size.y * field_size.x];
 
-    
+    // fill the array
+    g_fill_field(filename, field, field_size);
+
+    g_print_field(field, field_size);
+
+    // get the position of the guard
+    vector_t position = get_position_of_guard(field, field_size);
+
+    g_print_vector(position);
+
 }
