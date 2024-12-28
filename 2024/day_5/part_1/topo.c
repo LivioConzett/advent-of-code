@@ -196,6 +196,14 @@ static void tp_free_dependency(void* data, void* ignore){
     free(data);
 }
 
+/**
+ * See header
+ */
+void tp_delete_node_void(void* node, void* ignore){
+
+    tp_delete_node(node);
+
+}
 
 /**
  * See header
@@ -212,4 +220,60 @@ void tp_delete_node(tp_node_t* node){
     free(node);
 }
 
+/**
+ * \brief check if a number is in an array
+ * \param number number to search for
+ * \param array the array to look through
+ * \param array_length length of the array
+ * \return 0 if not found, 1 if found
+ */
+int tp_is_number_in_array(int number, int* array, int array_length){
+
+    for(int i = 0; i < array_length; i ++){
+        if(array[i] == number) return 1;
+    }
+
+    return 0;
+}
+
+
+/**
+ * See header
+ */
+lnk_node_t* tp_create_tree(int* array, int array_length, int* first_numbers, int* second_numbers, int numbers_length){
+
+    lnk_node_t* tree = lnk_create_list();
+
+    for(int i = 0; i < numbers_length; i++){
+    
+        if(tp_is_number_in_array(first_numbers[i], array, array_length) && 
+           tp_is_number_in_array(second_numbers[i], array, array_length)
+           ){
+                
+                int index = tp_find_index_of_data(tree, second_numbers[i]);
+
+                if(index < 0){
+                    tp_node_t* node = tp_create_node(second_numbers[i]);
+                    tp_add_dependency(node, first_numbers[i]);
+                    lnk_append_data(tree, node);
+                }
+                else{
+                    tp_node_t* node = (tp_node_t*)lnk_get_data_at_index(tree, index);
+                    tp_add_dependency(node, first_numbers[i]);
+                }
+
+                // add the other number also as a node
+                index = tp_find_index_of_data(tree, first_numbers[i]);
+                
+                if(index < 0){
+                    tp_node_t* node = tp_create_node(first_numbers[i]);
+                    lnk_append_data(tree, node);
+                }
+
+           }
+    }
+
+
+    return tree;
+}
 

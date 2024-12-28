@@ -74,8 +74,25 @@ int tp_find_index_of_data(lnk_node_t* anchor, int number);
 tp_node_t* tp_find_leaf(lnk_node_t* list);
 
 /**
+ * \brief delete node useing void pointer
+ */
+void tp_delete_node_void(void* node, void* ignore);
+
+/**
  * \brief delete a node including the dependencies
  */
 void tp_delete_node(tp_node_t* node);
+
+/**
+ * \brief create the tree according to the array
+ * \param array array of the numbers to be sorted
+ * \param array_length length of the array
+ * \param first_numbers array of the first sorting numbers
+ * \param second_numbers array of the second sorting numbers
+ * \param numbers_length length of the numbers array
+ * \return pointer to the tree created
+ */
+lnk_node_t* tp_create_tree(int* array, int array_length, int* first_numbers, int* second_numbers, int numbers_length);
+
 
 #endif

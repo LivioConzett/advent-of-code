@@ -8,10 +8,89 @@
 #include "topo.h"
 
 
+
+
+/**
+ * See header
+ */
+int f_find_length_of_csl(char* line){
+    int length = strlen(line);
+    int counter = 0;
+
+    for(int i = 0; i < length; i++){
+        if(line[i] == ',') counter ++;
+    }
+
+    // + 1 because of the ladder problem
+    return counter + 1;
+}
+
+/**
+ * See header
+ */
+void f_fill_line_array(char* line, int* array, int length){
+
+    char number[100];
+    int number_index = 0;
+    int array_index = 0;
+
+    for(int i = 0; i < strlen(line); i++){
+
+        if(array_index > length) return;
+        if(number_index > 100) return;
+
+        if(line[i] == ',' || line[i] == '\n'){
+            array[array_index] = atoi(number);
+            number[0] = 0;
+            number_index = 0;
+            array_index++;
+            continue;
+        }
+
+        number[number_index] = line[i];
+        number_index++;
+    }
+}
+
+
+/**
+ * See header
+ */
+int f_length_of_sort(char* filename){
+
+    FILE* file_ptr;
+    file_ptr = fopen(filename,"r");
+
+    // make sure the file could be opend
+    if (file_ptr == NULL){
+        printf("Cannot open file %s\n", filename);
+        exit(EXIT_FAILURE);
+    }
+
+    size_t read = 0;
+    char* line = NULL;
+    size_t len = 0;
+    int counter = 0;
+
+    while(read != -1){
+        
+        read = getline(&line, &len, file_ptr);
+        if(read == -1) break;
+        // only read up to the empty line
+        if(strlen(line) <= 1) break;
+
+        counter++;
+
+    }
+
+    return counter;
+}
+
+
 /**
  * See header file
  */
-lnk_node_t* f_create_dependency_tree(char* filename){
+void f_fill_sort_arrays(char* filename, int* first_numbers, int* second_numbers, int length){
 
     // opent the file
     FILE* file_ptr;
@@ -30,7 +109,10 @@ lnk_node_t* f_create_dependency_tree(char* filename){
     char* line = NULL;
     size_t len = 0;
 
-    while(read != -1){
+    int index_counter = 0;
+
+    while(read != -1 && index_counter < length){
+
         read = getline(&line, &len, file_ptr);
         if(read == -1) break;
         // only read up to the empty line
@@ -70,36 +152,12 @@ lnk_node_t* f_create_dependency_tree(char* filename){
             counter++;
         }
 
-        // printf("%s : %s\n", first_num, second_num);
+        first_numbers[index_counter] = atoi(first_num);
+        second_numbers[index_counter] = atoi(second_num);
 
-        int number_1 = atoi(first_num);
-        int number_2 = atoi(second_num);
-
-        // check if the already exists
-        int index = tp_find_index_of_data(list, number_2);
-
-        if(index < 0){
-            tp_node_t* node = tp_create_node(number_2);
-            tp_add_dependency(node, number_1);
-            lnk_append_data(list, node);
-        }
-        else{
-            tp_node_t* node = (tp_node_t*)lnk_get_data_at_index(list, index);
-            tp_add_dependency(node,number_1);
-        }
-
-        // add the other number also as a node
-        index = tp_find_index_of_data(list, number_1);
-        
-        if(index < 0){
-            tp_node_t* node = tp_create_node(number_1);
-            lnk_append_data(list, node);
-        }
-
+        index_counter++;
 
     }
-
-    return list;
 }
 
 
