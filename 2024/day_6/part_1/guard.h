@@ -9,9 +9,10 @@ typedef struct{
 } vector_t;
 
 
-enum characters{
+enum Characters{
     EMPTY = '.',
     BLOCK = '#',
+    TOUCHED = 'x',
     UP = '^',
     DOWN = 'v',
     LEFT = '<',
@@ -36,26 +37,43 @@ vector_t g_get_size_of_field(char* filename);
 /**
  * \brief fill the 2d array with the contents of the file
  * \param filename file to read from
- * \param array the array to fill the data into
+ * \param field the array to fill the data into
  * \param size vector of the size of the field
  */
-void g_fill_field(char* filename, char* array, vector_t size);
+void g_fill_field(char* filename, char* field, vector_t size);
 
 
 /**
  * \brief print out the 2d array
- * \param array array to print
+ * \param field array to print
  * \param size vector of the size
  */
-void g_print_field(char* array, vector_t size);
+void g_print_field(char* field, vector_t size);
 
 
 /**
  * \brief find the position of the guard
- * \param array the field to search through
+ * \param field the field to search through
  * \param size size of the field
  * \return position of the guard. (-1,-1) if no guard was found.
  */
-vector_t get_position_of_guard(char* array, vector_t size);
+vector_t get_position_of_guard(char* field, vector_t size);
+
+/**
+ * \brief move the guard by one. Updates the position of the guard.
+ * \param field the field
+ * \param size the size of the field
+ * \param position the position of the guard
+ * \return 1 if the guard left the field, else 0
+ */
+int g_move(char* field, vector_t size, vector_t* position);
+
+/**
+ * \brief count the number of touched fields
+ * \param field field to check
+ * \param size size of the field
+ * \return number of fields touched
+ */
+int g_count_touched_fields(char* field, vector_t size);
 
 #endif

@@ -30,11 +30,21 @@ int main(int argc, char* argv[]){
     // fill the array
     g_fill_field(filename, field, field_size);
 
-    g_print_field(field, field_size);
+    // g_print_field(field, field_size);
 
     // get the position of the guard
     vector_t position = get_position_of_guard(field, field_size);
 
-    g_print_vector(position);
+    int left_field = 0;
+
+    while(!left_field){
+
+        left_field = g_move(field, field_size, &position);
+
+        // printf("------------------\n");
+        // g_print_field(field, field_size);
+    }
+
+    printf("unique fields: %d\n", g_count_touched_fields(field, field_size));
 
 }
