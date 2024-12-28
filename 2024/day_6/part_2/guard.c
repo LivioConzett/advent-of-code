@@ -178,12 +178,14 @@ int g_move(char* field, vector_t size, vector_t* position, int mark_touched){
     }
 
     // if the next step would cause them to leave the field
-    if(pos.y < 0 || pos.y >= size.y || pos.x < 0 || pos.x >= size.x) return 1;
+    if(pos.y < 0 || pos.y >= size.y || pos.x < 0 || pos.x >= size.x) {
+        if(mark_touched) previous_field = TOUCHED;
+        return 1;
+    }
 
     // turn the guard if the next field is not empty
     char next = field[(pos.y * size.x) + pos.x];
-    previous_field = next;
-    if(next == BLOCK){
+    if(next == BLOCK || next == OBSTACLE){
         guard = g_turn_90_deg_cw(guard);
         // update the position of the guard in the field
         field[(position->y * size.x) + position->x] = guard;
@@ -194,6 +196,7 @@ int g_move(char* field, vector_t size, vector_t* position, int mark_touched){
     // clear the position of the guard
     if(mark_touched) field[(position->y * size.x) + position->x] = TOUCHED;
     else field[(position->y * size.x) + position->x] = previous_field;
+    previous_field = next;
     // place the guard in the new position
     field[(pos.y * size.x) + pos.x] = guard;
 
@@ -214,10 +217,10 @@ int g_count_touched_fields(char* field, vector_t size){
 
     for(int y = 0; y < size.y; y++){
         for(int x = 0; x < size.x; x++){
-            char character = field[(y * size.x) + x];
+            char c = field[(y * size.x) + x];
 
             // count the guard and the touched fields
-            if(character != EMPTY && character != BLOCK) counter ++;
+            if(c == TOUCHED || c == UP || c == DOWN || c == LEFT || c == RIGHT) counter ++;
         }
     }
 
@@ -231,8 +234,10 @@ void g_set_guard(char* field, vector_t size, vector_t position, char guard){
 
     vector_t old_pos = get_position_of_guard(field, size);
 
-    field[(old_pos.y * size.x) + old_pos.x] = TOUCHED;
+    field[(old_pos.y * size.x) + old_pos.x] = previous_field;
     field[(position.y * size.x) + position.x] = guard;
+
+    previous_field = TOUCHED;
 
 }
 

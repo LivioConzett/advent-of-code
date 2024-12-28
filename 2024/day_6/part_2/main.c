@@ -47,14 +47,46 @@ int main(int argc, char* argv[]){
     // get the amount of touched fields
     int amount_of_touched = g_count_touched_fields(field, field_size);
 
+    // g_print_field(field, field_size);
+
     g_set_guard(field, field_size, original_pos, original_guard);
+    position.x = original_pos.x;
+    position.y = original_pos.y;
 
-    g_print_field(field, field_size);
+    // g_print_field(field, field_size);
 
-    for(int i = 0; i < 10; i++){
-        g_set_obstacle(field, field_size);
 
-        g_print_field(field, field_size);
+    int obstacle_set = 1;
+    int guard_left = 0;
+    int counter = 0;
+
+    // brute-force the whole thing
+    while(obstacle_set){
+        // set the obstacle
+        obstacle_set = g_set_obstacle(field, field_size);
+
+        // run the guard around and see if there is a loop
+        for(int i = 0; i < amount_of_touched * 4; i++){
+            guard_left = g_move(field, field_size, &position, 0);
+
+            if(guard_left) break;
+
+            //if(counter == 5) g_print_field(field, field_size);
+        }
+
+        if(!guard_left){
+            guard_left = 0;
+            counter ++;
+            // g_print_field(field, field_size);
+        }
+
+        // reset the guard
+        g_set_guard(field, field_size, original_pos, original_guard);
+        position.x = original_pos.x;
+        position.y = original_pos.y;
+
     }
 
+    printf("amount found: %d\n", counter);
+    return 0;
 }
