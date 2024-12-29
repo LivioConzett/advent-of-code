@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "mathe.h"
 
@@ -18,18 +19,18 @@ int main(int argc, char* argv[]){
     char* line = NULL;
     size_t len = 0;
 
-    int sum = 0;
+    unsigned long long sum = 0;
 
-    int counter = 0;
+    while(getline(&line, &len, file) != -1){
 
-    while(getline(&line, &len, file) != -1 && counter < 1){
+        unsigned long long num = m_evaluate_line(line);
+        if(num > 0){
+            printf("%s", line);
+            sum += num;
+        }
 
-        sum += m_evaluate_line(line);
-
-        counter ++;
     }
 
-
-    printf("sum %d\n", sum);
+    printf("sum %lld\n", sum);
     return 0;
 }
