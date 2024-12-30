@@ -2,11 +2,7 @@
 #ifndef FILE_H
 #define FILE_H
 
-
-typedef struct {
-    int x;
-    int y;
-} vector_t;
+#include "vector.h"
 
 
 enum Characters{
