@@ -34,5 +34,4 @@ void f_fill_field(char* filename, char field[], vector_t size);
 void f_empty_field(char field[], vector_t size);
 
 
-
 #endif

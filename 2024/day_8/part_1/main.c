@@ -51,6 +51,24 @@ void check_direction(char* field, char* antinodes, vector_t field_size, vector_t
     }
 }
 
+/**
+ * \brief count the number of nodes in a field
+ * \param field field to count through
+ * \param size size of the field
+ * \return number of nodes in the field
+ */
+int count_nodes(char* field, vector_t size){
+    
+    int counter = 0;
+    
+    for(int y = 0; y < size.y; y++){
+        for(int x = 0; x < size.x; x++){
+            if(field[(y * size.x) + x] == NODE) counter ++;
+        }
+    }
+
+    return counter;
+}
 
 /**
  * Main entry point
@@ -71,6 +89,7 @@ int main(int argc, char* argv[]){
 
     // position of the current character
     vector_t pos = {0,0};
+    vector_t check_pos = {0,0};
 
     // go through the field
     for(pos.y = 0; pos.y < field_size.y; pos.y++){
@@ -81,39 +100,30 @@ int main(int argc, char* argv[]){
             // don0t do the empty fields
             if(c == EMPTY) continue;
 
-            // get the higher of the two numbers
-            int higher = v_get_higher(&field_size);
+            for(check_pos.y = 0; check_pos.y < field_size.y; check_pos.y++){
+                for(check_pos.x = 0; check_pos.x < field_size.x; check_pos.x++){
 
-            // start looking around the field in ever
-            // growing circles.
-            // Start at 1 because we don't want to check the field
-            // we are already on.
-            for(int radius = 1; radius < higher; radius++){
-                
-                // north
-                check_direction(field, antinodes, field_size, pos,  N_V, radius, c);
+                    char check_c = field[(check_pos.y * field_size.x) + check_pos.x];
 
-                // north east
-                check_direction(field, antinodes, field_size, pos, NE_V, radius, c);
+                    // don't check the same place
+                    if(v_equal(&check_pos, &pos)) continue;
+                    // only do it if you find the same character
+                    if(c != check_c) continue;
+                    
+                    // get the distance between the two
+                    vector_t distance = pos;
+                    vector_t new_pos = pos;
+                    v_subtract(&distance, &check_pos);
+                    
+                    //v_print(&distance, 1);
+                    //v_flip(&distance);
 
-                // east
-                check_direction(field, antinodes, field_size, pos,  E_V, radius, c);
-                
-                // south east
-                check_direction(field, antinodes, field_size, pos, SE_V, radius, c);
+                    v_add(&new_pos, &distance);
 
-                // south
-                check_direction(field, antinodes, field_size, pos,  S_V, radius, c);
-
-                // south west
-                check_direction(field, antinodes, field_size, pos, SW_V, radius, c);
-
-                // west
-                check_direction(field, antinodes, field_size, pos,  W_V, radius, c);
-
-                // north west
-                check_direction(field, antinodes, field_size, pos, NW_V, radius, c);
-                
+                    if(v_in_bound(&new_pos, &field_size)){
+                        antinodes[(new_pos.y * field_size.x) + new_pos.x] = NODE;
+                    }
+                }
             }
         }
     }
@@ -121,8 +131,11 @@ int main(int argc, char* argv[]){
     print_field(field, field_size);
     printf("-------\n");
     print_field(antinodes, field_size);
-            
+    
+    int nodes = count_nodes(antinodes, field_size);
 
-
+    printf("nodes: %d\n", nodes);
     return 0;
 }
+
+

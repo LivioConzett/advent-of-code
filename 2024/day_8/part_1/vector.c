@@ -62,8 +62,8 @@ int v_get_lower(vector_t* vector){
  */
 int v_in_bound(vector_t* vector, vector_t* bounds){
 
-    if(vector->x < 0 || vector->x > bounds->x) return 0;
-    if(vector->y < 0 || vector->y > bounds->y) return 0;
+    if(vector->x < 0 || vector->x >= bounds->x) return 0;
+    if(vector->y < 0 || vector->y >= bounds->y) return 0;
     return 1;
 }
 
@@ -74,4 +74,10 @@ void v_flip(vector_t* vector){
     v_multiply(vector,-1);
 }
 
+/**
+ * See header
+ */
+int v_equal(vector_t* one, vector_t* two){
+    return one->x == two->x && one->y == two->y;
+}
 

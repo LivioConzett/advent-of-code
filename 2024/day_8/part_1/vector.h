@@ -74,4 +74,12 @@ int v_in_bound(vector_t* vector, vector_t* bounds);
  */
 void v_flip(vector_t* vector);
 
+/**
+ * \brief check if two vectors are the same
+ * \param one first vector
+ * \param two second vector
+ * \return 1 if both vectors are the same, else 0
+ */
+int v_equal(vector_t* one, vector_t* two);
+
 #endif
