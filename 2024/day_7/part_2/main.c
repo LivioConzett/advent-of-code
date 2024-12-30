@@ -21,14 +21,18 @@ int main(int argc, char* argv[]){
 
     unsigned long long sum = 0;
 
+    int counter = 0;
+
     while(getline(&line, &len, file) != -1){
+        
+        // printf("%s", line);
 
         unsigned long long num = m_evaluate_line(line);
         if(num > 0){
             printf("%s", line);
             sum += num;
         }
-
+        counter ++;
     }
 
     printf("sum %lld\n", sum);

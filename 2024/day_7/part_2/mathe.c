@@ -61,6 +61,25 @@ void m_fill_array(char* line, unsigned long long* array){
 }
 
 /**
+ * \brief Reverse a string
+ * \param string string to reverse
+ */
+void m_reverse_string(char* string){
+
+    int length = strlen(string);
+
+    char new[length+1];
+
+    for(int i = 0; i < length; i++){
+        new[i] = string[length -1 - i];
+    }
+    new[length] = 0;
+
+    strcpy(string, new);
+
+}
+
+/**
  * \brief Create the operand line for the number
  * \param line line to place the operands in
  * \param number number to count up to
@@ -68,25 +87,32 @@ void m_fill_array(char* line, unsigned long long* array){
  */
 void m_create_operand_line(char* line, int number, int width){
 
+    static char CHARS[] = {"+*|"};
+    static int base = 3;
+
     int line_counter = 0;
 
-    for(int i = 1 << (width-1); i > 0; i = i/2){
+    do{
+        line[line_counter] = CHARS[number % base];
+        number = number / base;
+        line_counter ++;
+    }while(number > 0);
 
-        if((number & i) != 0){
-            line[line_counter] = '*';
-            //printf("1");
-        }
-        else{
-            line[line_counter] = '+';
-            //printf("0");
-        }
+    // cap the string
+    line[line_counter] = 0;
 
+    int length = strlen(line);
+    int buffer = width - length;
+
+    for(int i = 0; i < buffer; i++){
+        line[line_counter] = CHARS[0];
         line_counter++;
     }
 
-    //printf("\n");
-    // cap the string
+    // cap the string again
     line[line_counter] = 0;
+
+    m_reverse_string(line);
 }
 
 /**
@@ -109,6 +135,19 @@ void m_create_operand_array(char* array, int height, int width){
     }
 }
 
+/**
+ * \brief concat two numbers
+ * \param first first number
+ * \param second second number to append to the first
+ * \return both numbers concatenated
+ */
+unsigned long long m_concat_numbers(unsigned long long first, unsigned long long second){
+    unsigned long long pow = 10;
+
+    while(second >= pow) pow *= 10;
+
+    return (first * pow) + second;
+}
 
 
 /**
@@ -125,7 +164,7 @@ unsigned long long m_evaluate_line(char* line){
     // don't count the result (first number)
     // and there is one less space then numbers
     int width = array_length - 2;
-    int height = (int) pow(2.0, (double) width);
+    int height = (int) pow(3.0, (double) width);
 
     char op_array[height * width];
 
@@ -147,10 +186,14 @@ unsigned long long m_evaluate_line(char* line){
             if(op == '+'){
                 result += num_array[x+2];
             }
-            else{
+            else if(op == '*'){
                 result *= num_array[x+2];
             }
+            else{
+                result = m_concat_numbers(result, num_array[x+2]);
+            }
         }
+        
         // printf("\n");
 
         if(num_array[0] == result){
@@ -164,3 +207,11 @@ unsigned long long m_evaluate_line(char* line){
     return 0;
 }
 
+
+
+/*
+
+max unsigned long long:
+18446744073709551615
+
+*/
