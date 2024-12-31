@@ -3,13 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-typedef struct mem_block_t{
-    int id;
-    int size;
-} mem_block_t;
-
-
 /**
  * \brief get the size of the memory that will be needed
  * \param filename name of the file to get input from
@@ -31,11 +24,18 @@ int get_mem_size(char* filename){
     char* line = NULL;
 
     while((getline(&line, &len, file)) != -1){
-        // -1 because we don't want the newline
-        count = strlen(line) - 1;
+
+        for(int i = 0; i < strlen(line); i++){
+            char num[2];
+            num[0] = line[i];
+            num[1] = 0;
+            count += atoi(num);
+        }
     }
 
+
     fclose(file);
+
     return count;
 }
 
@@ -44,14 +44,11 @@ int get_mem_size(char* filename){
  * \param mem memory to print 
  * \param size size of the memory
  */
-void print_mem(mem_block_t* mem, int size){
+void print_mem(int* mem, int size){
 
     for(int i = 0; i < size; i++){
-
-        for(int ii = 0; ii < mem[i].size; ii++){
-            if(mem[i].id == -1) printf(". ");
-            else printf("%d ", mem[i].id);
-        }
+        if(mem[i] == -1) printf(". ");
+        else printf("%d ", mem[i]);
     }
     printf("\n");
 }
@@ -63,7 +60,7 @@ void print_mem(mem_block_t* mem, int size){
  * \param mem memory to write to
  * \param size size of the memory
  */
-void fill_memory(char* filename, mem_block_t* mem, int size){
+void fill_memory(char* filename, int* mem, int size){
     
     
     FILE* file;
@@ -91,21 +88,21 @@ void fill_memory(char* filename, mem_block_t* mem, int size){
             num[1] = 0;
             int number = atoi(num);
 
-            if(i % 2 == 0) {
-                mem[mem_index].id = block_index;
-                block_index++;
+            for(int ii = 0; ii < number; ii++){
+                
+                if(i % 2 == 0) mem[mem_index] = block_index;
+                else mem[mem_index] = -1;
+
+
+                mem_index ++;
+                if(mem_index > size){
+                    fclose(file);
+                    return;
+                };
             }
-            else{
-                mem[mem_index].id = -1;
-            } 
 
-            mem[mem_index].size = number;
+            if(i % 2 == 0) block_index++;
 
-            mem_index ++;
-            if(mem_index > size){
-                fclose(file);
-                return;
-            };
         }
     }
 
@@ -114,39 +111,68 @@ void fill_memory(char* filename, mem_block_t* mem, int size){
 
 
 /**
+ * \brief get the size of the block
+ * \param mem the memory array
+ * \param size size of the mem
+ * \param index index to start at
+ * \param count_amount amount to count up or down
+ * \return size of the block with the id
+ */
+int size_count(int* mem, int size, int index, int count_amount){
+
+    int id = mem[index];
+    int counter = 0;
+    
+    // go through the memory starting at the index and going
+    // as long as it is within the limits of the memory.
+    // Increment by the count amount (which can be negative).
+    for(;index >= 0 || index < size; index += count_amount){
+
+        if(mem[index] == id) counter++;
+        else break;
+    }
+
+    return counter;
+}
+
+
+/**
  * \brief defrag the memory
  * \param mem memory to defrag
  * \param size size of the memory
- * \param new_mem new memory to place the mem into
- * \param new_size size of the new mem
  */
-void defrag(mem_block_t* mem, int size, mem_block_t* new_mem, int new_size){
+void defrag(int* mem, int size){
 
-    // set up the left and right indexes
-    int l = 0;
-    int r = size - 1;
+    for(int r = size - 1; r >= 0; r--){
 
-    int new_index = 0;
+        if(mem[r] != -1){
+            int r_size = size_count(mem, size, r, -1);
+            // printf("r size: %d, %d\n",r_size, mem[r]);
 
-    while(l < r){
+            for(int l = 0; l < r; l++){
 
-        if(mem[l].id != -1){
-            new_mem[new_index].id = mem[l].id;
-            new_mem[new_index].size = mem[l].size;
-            l++;
-            if(l >= r) return;
-            continue;
+                if(mem[l] == -1){
+                    int l_size = size_count(mem, size, l, 1);
+                    // printf("l size: %d, %d\n",l_size, mem[l]);
+
+                    if(l_size >= r_size){
+                        // printf("fit %d\n", mem[r]);
+                        for(int i = 0; i < r_size; i++){
+                            mem[l+i] = mem[r-i];
+                            mem[r-i] = -1;
+                        }
+                        break;
+                    }
+                    else{
+                        // - 1 because the for loop will increment it anyway
+                        l += (l_size - 1);
+                    }
+                }
+            }
+
+            r -= (r_size -1);
+
         }
-
-        if(mem[r].id != -1){
-            r--;
-
-            if(l >= r) return;
-            continue;
-        }
-
-        
-
     }
 }
 
@@ -161,9 +187,7 @@ unsigned long long calculate_checksum(int* mem, int size){
 
     for(int i = 0; i < size; i++){
         
-        if(mem[i] == -1) break;
-
-        sum += mem[i] * i;
+        if(mem[i] != -1) sum += mem[i] * i;
         
     }
 
@@ -184,23 +208,20 @@ int main(int argc, char* argv[]){
     printf("%d\n", mem_length);
     
     // create the memory
-    mem_block_t mem[mem_length];
+    int mem[mem_length];
 
     // fill the memory
     fill_memory(filename, mem, mem_length);
 
     print_mem(mem, mem_length);
 
-    // create the memory for the defragged mem
-    mem_block_t new_mem[mem_length * 2];
-
-    defrag(mem, mem_length, new_mem, mem_length * 2);
+    defrag(mem, mem_length);
 
     print_mem(mem, mem_length);
 
-    // unsigned long long checksum = calculate_checksum(mem, mem_length);
+    unsigned long long checksum = calculate_checksum(mem, mem_length);
 
-    // printf("sum %llu\n", checksum);
+    printf("sum %llu\n", checksum);
 
     return 0;
 }
