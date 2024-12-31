@@ -91,13 +91,17 @@ int main(int argc, char* argv[]){
     vector_t pos = {0,0};
     vector_t check_pos = {0,0};
 
+    // the maximum radius for the for loop 
+    // that draws the line.
+    int max_radius = v_get_higher(&field_size);
+
     // go through the field
     for(pos.y = 0; pos.y < field_size.y; pos.y++){
         for(pos.x = 0; pos.x < field_size.x; pos.x++){
 
             char c = field[(pos.y * field_size.x) + pos.x];
 
-            // don0t do the empty fields
+            // don't do the empty fields
             if(c == EMPTY) continue;
 
             for(check_pos.y = 0; check_pos.y < field_size.y; check_pos.y++){
@@ -112,17 +116,33 @@ int main(int argc, char* argv[]){
                     
                     // get the distance between the two
                     vector_t distance = pos;
-                    vector_t new_pos = pos;
                     v_subtract(&distance, &check_pos);
-                    
-                    //v_print(&distance, 1);
-                    //v_flip(&distance);
 
-                    v_add(&new_pos, &distance);
+                    // get the direction of the distance
+                    vector_t direction = v_get_direction(&distance);
 
-                    if(v_in_bound(&new_pos, &field_size)){
-                        antinodes[(new_pos.y * field_size.x) + new_pos.x] = NODE;
-                    }
+                    for(int radius = 0; radius < max_radius; radius++){
+                        
+                        vector_t delta = distance;
+
+                        v_multiply(&delta, radius);
+
+                        vector_t new_pos = pos;
+                        
+                        v_add(&new_pos, &delta);
+                        
+                        if(v_in_bound(&new_pos, &field_size)){
+                            antinodes[(new_pos.y * field_size.x) + new_pos.x] = NODE;
+                        }
+
+                        new_pos = pos;
+
+                        v_subtract(&new_pos, &delta);
+
+                        if(v_in_bound(&new_pos, &field_size)){
+                            antinodes[(new_pos.y * field_size.x) + new_pos.x] = NODE;
+                        }
+                    }   
                 }
             }
         }

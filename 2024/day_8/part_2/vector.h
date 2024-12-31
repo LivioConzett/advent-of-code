@@ -47,6 +47,13 @@ void v_subtract(vector_t* one, vector_t* two);
 void v_multiply(vector_t* vector, int multiplier);
 
 /**
+ * \brief divide the vector by a number
+ * \param vector vector to divide
+ * \param divisor number to divide by
+ */
+void v_divide(vector_t* vector, int divisor);
+
+/**
  * \brief get the higher of the two numbers in the vector
  * \param vector vector to get number from
  * \return the higher of the two numbers in the vector
@@ -81,5 +88,27 @@ void v_flip(vector_t* vector);
  * \return 1 if both vectors are the same, else 0
  */
 int v_equal(vector_t* one, vector_t* two);
+
+/**
+ * \brief get the magnitude of a vector
+ * \param vector vector to get magnitude of
+ * \return magnitude of vector
+ */
+double v_get_magnitude(vector_t* vector);
+
+/**
+ * \brief get the unit vector of a vector
+ * \param vector vector to get unit vector from
+ * \return unit vector
+ */
+vector_t v_get_unit_vector(vector_t* vector);
+
+/**
+ * \brief get the direction of the vector in a grid system
+ * \param vector vector to get the direction from
+ * \return vector of the direction
+ */
+vector_t v_get_direction(vector_t* vector);
+
 
 #endif
