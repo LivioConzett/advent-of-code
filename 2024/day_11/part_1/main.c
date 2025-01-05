@@ -21,12 +21,86 @@ void print_list(lnk_node_t* list){
     lnk_do_on_each_node(list, print_number, 0);
 }
 
+
+/**
+ * \brief append the number to the list
+ * \param list list to append to
+ * \param number number to append
+ */
+void append_number(lnk_node_t* list, long number){
+
+    long* num = (long*) malloc(sizeof(long));
+    if(num == NULL){
+        printf("could not mallo number\n");
+        exit(EXIT_FAILURE);
+    }
+
+    *num = number;
+
+    lnk_append_data(list, num);
+
+}
+
+/**
+ * \brief fre the memory for the delete list
+ */
+void free_number(void* number, void* ignore){
+    free(number);
+}
+
+/**
+ * \brief delete a list and its data
+ * \param list list to delete
+ */
+void delete_list(lnk_node_t* list){
+
+    lnk_do_on_each_node(list, free_number, 0);
+
+    lnk_delete_list(list);
+
+}
+
+/**
+ * \brief check if the number has an even length
+ * \param list list to append if the length is even
+ * \param number number to check
+ * \return 1 if the numbers length was even, else 0
+ */
+int check_even_length(lnk_node_t* list, long number){
+
+    char num[100];
+    sprintf(num, "%ld", number);
+    int len = strlen(num);
+
+    if(len % 2 == 0){
+        
+        int half = len / 2;
+        char n[half+1];
+
+        for(int i = 0; i < 2; i++){
+            for(int ii = 0; ii < half; ii++){
+                
+                n[ii] = num[(i*half)+ii];
+
+            }
+            n[half] = 0;
+
+            append_number(list, strtol(n,NULL,10));
+        }
+
+        return 1;
+    }
+
+    return 0;
+}
+
 /**
  * Main entry point
  */
 int main(int argc, char* argv[]){
 
     char* filename = argv[1];
+    int amount = atoi(argv[2]);
 
     lnk_node_t* list = lnk_create_list();
 
@@ -53,15 +127,7 @@ int main(int argc, char* argv[]){
                 // cap the stirng
                 num[num_index] = 0;
 
-                int* number = (int*) malloc(sizeof(int));
-                if(number == NULL){
-                    printf("could not malloc number\n");
-                    exit(EXIT_FAILURE);
-                }
-
-                *number = atoi(num);
-
-                lnk_append_data(list, number);
+                append_number(list, strtol(num, NULL, 10));
 
                 num_index = 0;
                 num[0] = 0;
@@ -74,6 +140,57 @@ int main(int argc, char* argv[]){
 
     print_list(list);
 
+    printf("--------\n");
+
+
+    // blink a couple of times
+    for(int i = 0; i < amount; i++){
+        printf("iteration: %d\n",i);
+
+        int len = lnk_list_length(list);
+
+        lnk_node_t* new_list = lnk_create_list();
+
+        int shown = 0;
+
+        for(int ii = 0; ii < len; ii++){
+            
+            
+            double per = (float)ii/len;
+            int bar = 40*per;
+
+            for(int b = 0; b < (bar - shown); b++){
+                printf("#");
+            }
+            fflush(stdout);
+            shown = bar;
+
+
+            long* number = lnk_get_data_at_index(list, ii);
+
+
+            if(*number == 0l){
+                append_number(new_list, 1l);
+                continue;
+            }
+            
+            if(check_even_length(new_list, *number)) continue;
+            
+            append_number(new_list, (*number)*2024l);
+
+        }
+
+        lnk_node_t* old = list;
+        list = new_list;
+
+        delete_list(old);
+        printf("\n");
+        shown = 0;
+    }
+
+    // print_list(list);
+
+    printf("len: %d\n", lnk_list_length(list));
 
     return 0;
 }
