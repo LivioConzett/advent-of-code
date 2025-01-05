@@ -17,6 +17,12 @@ static const vector_t SW_V = {-1,1};
 static const vector_t  W_V = {-1,0};
 static const vector_t NW_V = {-1,-1};
 
+static const vector_t NESW[] = {
+    {0,-1},
+    {1,0},
+    {0,1},
+    {-1,0}
+};
 
 /**
  * \brief print the vector
@@ -31,6 +37,14 @@ void v_print(const vector_t* vector, int newline);
  * \param two second vector
  */
 void v_add(vector_t* one, vector_t* two);
+
+/**
+ * \brief add the second vector to the first creating a new vector
+ * \param one first vector
+ * \param two second vector
+ * \return vector of the sum of the two vectors
+ */
+vector_t v_add_n(vector_t* one, vector_t* two);
 
 /**
  * \brief subtract the second vector from the first

@@ -46,6 +46,19 @@ void v_add(vector_t* one, vector_t* two){
 /**
  * See header
  */
+vector_t v_add_n(vector_t* one, vector_t* two){
+
+    vector_t new = {0,0};
+    new.x = one->x + two->x;
+    new.y = one->y + two->y;
+
+    return new;
+}
+
+
+/**
+ * See header
+ */
 void v_subtract(vector_t* one, vector_t* two){
     one->x -= two->x;
     one->y -= two->y;
