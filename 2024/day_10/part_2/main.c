@@ -65,11 +65,11 @@ void search_trail(int field[], vector_t size, vector_t pos, int current_trail, l
         data->x = pos.x;
         data->y = pos.y;
 
-        if(lnk_find_index_of_data(nine_counter[current_trail],vector_equal, data) < 0){
+        //if(lnk_find_index_of_data(nine_counter[current_trail],vector_equal, data) < 0){
             lnk_append_data(nine_counter[current_trail], data);
             // printf("nine: %d: ",current_trail);
             // v_print(&pos, 1);
-        }
+        //}
         
         return;
     }
