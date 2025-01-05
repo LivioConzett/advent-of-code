@@ -168,37 +168,55 @@ int main(int argc, char* argv[]){
 
     printf("--------\n");
 
+    long sum = 0;
 
-    // blink a couple of times
-    for(int i = 0; i < amount; i++){
-        printf("iteration: %d\n",i);
+    int counter = 0;
 
+    int list_length = lnk_list_length(list);
 
-        int shown = 0;
+    lnk_node_t* current = list;
 
-        lnk_node_t* current = list;
-
-        while(current->next != list){
+    while(current->next != list){
             
-            current = current->next;
+        current = current->next;
+
+        lnk_node_t* new = lnk_create_list();
+        append_number(new,*(long*)current->data);
 
 
-            long* number = current->data;
+        for(int i = 0; i < amount; i++){
+            
+            printf("%d/%d: %d/%d\n", counter, list_length-1, i, amount-1);
 
+            lnk_node_t* new_current = new;
 
-            if(*number == 0l){
-                *number = 1l;
-                continue;
+            while(new_current->next != new){
+                
+                new_current = new_current->next;
+
+                long* number = new_current->data;
+
+                if(*number == 0l){
+                    *number = 1l;
+                    continue;
+                }
+                
+                if(check_even_length(new_current, *number)) continue;
+                
+                *number *= 2024l;
             }
             
-            if(check_even_length(current, *number)) continue;
-            
-            *number *= 2024l;
-
         }
+
+        sum += lnk_list_length(new);
+
+        delete_list(new);
+
+        counter ++;
+
     }
 
-    printf("len: %d\n", lnk_list_length(list));
+    printf("len: %ld\n", sum);
 
     return 0;
 }

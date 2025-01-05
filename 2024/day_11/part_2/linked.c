@@ -7,13 +7,13 @@
  */
 lnk_node_t* lnk_create_list(){
 
-    char* data = (char*) malloc(sizeof(char));
-    if (data == NULL) {
-        printf("malloc failed\n");
-        exit(-1);
-    }
+    // char* data = (char*) malloc(sizeof(char));
+    // if (data == NULL) {
+    //     printf("malloc failed\n");
+    //     exit(-1);
+    // }
 
-    lnk_node_t* anchor = lnk_create_node(data);
+    lnk_node_t* anchor = lnk_create_node(NULL);
 
     anchor->next = anchor;
     anchor->previous = anchor;
