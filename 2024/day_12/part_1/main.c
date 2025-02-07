@@ -83,8 +83,29 @@ void fill_field(char* field, vector_t size, char* filename){
 /**
  * Walk over the connected fields
  */
-void walk(char* field, int8_t* visited, vector_t size, vector_t current_pos){
-    
+int16_t walk(char* field, int8_t* visited, vector_t size, vector_t current_pos, char current_char){
+
+    int16_t result = 1;
+
+    // set the cell as visited
+    visited[(current_pos.y * size.x) + current_pos.x] = 1;
+
+    for(int8_t i = 0; i < 4; i++){
+
+        vector_t search = v_add_n(&current_pos, &NESW[i]);
+
+        // v_print(&search, 1);
+
+        if(!v_in_bound(&search, &size)) continue;
+
+        if(field[(search.y * size.x) + search.x] != current_char) continue;
+
+        if(visited[(search.y * size.x) + search.x]) continue;
+
+        result += walk(field, visited, size, search, current_char);
+    }
+
+    return result;
 }
 
 
@@ -123,7 +144,7 @@ int main(int argc, char* argv[]){
 
             if(visited[(y * size.x) + x]) continue;
 
-            walk(field, visited, size, (vector_t) {x,y});
+            printf("%d\n", walk(field, visited, size, (vector_t) {x,y}, field[(y * size.x) + x]));
 
         }
     }

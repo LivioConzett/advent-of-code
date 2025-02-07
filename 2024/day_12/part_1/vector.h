@@ -17,7 +17,7 @@ static const vector_t SW_V = {-1,1};
 static const vector_t  W_V = {-1,0};
 static const vector_t NW_V = {-1,-1};
 
-static const vector_t NESW[] = {
+static vector_t NESW[] = {
     {0,-1},
     {1,0},
     {0,1},
