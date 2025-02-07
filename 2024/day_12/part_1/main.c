@@ -83,9 +83,9 @@ void fill_field(char* field, vector_t size, char* filename){
 /**
  * Walk over the connected fields
  */
-int16_t walk(char* field, int8_t* visited, vector_t size, vector_t current_pos, char current_char){
+vector_t walk(char* field, int8_t* visited, vector_t size, vector_t current_pos, char current_char){
 
-    int16_t result = 1;
+    vector_t result = {1, 0};
 
     // set the cell as visited
     visited[(current_pos.y * size.x) + current_pos.x] = 1;
@@ -96,13 +96,22 @@ int16_t walk(char* field, int8_t* visited, vector_t size, vector_t current_pos, 
 
         // v_print(&search, 1);
 
-        if(!v_in_bound(&search, &size)) continue;
+        if(!v_in_bound(&search, &size)){
+            // add a fence
+            result.y++;
+            continue;
+        }
 
-        if(field[(search.y * size.x) + search.x] != current_char) continue;
+        if(field[(search.y * size.x) + search.x] != current_char){
+            // add a fence
+            result.y++;
+            continue;
+        }
 
         if(visited[(search.y * size.x) + search.x]) continue;
 
-        result += walk(field, visited, size, search, current_char);
+        vector_t new = walk(field, visited, size, search, current_char);
+        v_add(&result, &new);
     }
 
     return result;
@@ -119,7 +128,7 @@ int main(int argc, char* argv[]){
 
     vector_t size = get_field_size(filename);
 
-    v_print(&size, 1);
+    //v_print(&size, 1);
 
     // game field
     char field[size.x * size.y];
@@ -137,6 +146,7 @@ int main(int argc, char* argv[]){
     // fill the field
     fill_field(field, size, filename);
 
+    int32_t result = 0;
 
     // go through the array
     for(int y = 0; y < size.y; y++){
@@ -144,12 +154,13 @@ int main(int argc, char* argv[]){
 
             if(visited[(y * size.x) + x]) continue;
 
-            printf("%d\n", walk(field, visited, size, (vector_t) {x,y}, field[(y * size.x) + x]));
+            vector_t amount = walk(field, visited, size, (vector_t) {x,y}, field[(y * size.x) + x]);
 
+            result += amount.x * amount.y;
         }
     }
 
-
+    printf("%d\n", result);
 
     return 0;
 }
