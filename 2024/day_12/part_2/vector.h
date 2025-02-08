@@ -18,10 +18,10 @@ static const vector_t  W_V = {-1,0};
 static const vector_t NW_V = {-1,-1};
 
 static vector_t NESW[] = {
-    {0,-1},
-    {1,0},
-    {0,1},
-    {-1,0}
+    N_V,
+    E_V,
+    S_V,
+    W_V
 };
 
 /**
