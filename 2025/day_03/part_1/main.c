@@ -97,13 +97,11 @@ void fill_array(char* array, array_size_t size, char* filename){
 
         for(int ii = 0; ii < size.columns; ii++){
 
-
             character[0] = line[ii];
 
             array[(i * size.columns) + ii] = atoi(character);
 
         }
-        printf("--\n");
     }
     free(line);
 }
@@ -130,14 +128,37 @@ int main(int argc, char* argv[]){
 
     fill_array(array, array_size, filename);
 
+    int first_digit = 0;
+    int first_digit_index = 0;
+    int second_digit = 0;
+    int total = 0;
 
     for(int i = 0; i < array_size.rows; i++){
-        for(int ii = 0; ii < array_size.columns; ii++){
-            printf("%d", array[(i * array_size.columns)+ii]);
+        
+        first_digit = 0;
+        first_digit_index = 0;
+        second_digit = 0;
+
+        // find the highest first digit
+        // only go to the second to last number since we need two digits
+        for(int ii = 0; ii < array_size.columns - 1; ii++){
+            if(array[(i * array_size.columns) + ii] > first_digit){
+                first_digit = array[(i * array_size.columns) + ii];
+                first_digit_index = ii;
+            }
         }
-        printf("\n");
+
+        // find the second digit
+        for(int ii = array_size.columns - 1; ii > first_digit_index; ii--){
+            if(array[(i * array_size.columns) + ii] > second_digit){
+                second_digit = array[(i * array_size.columns) + ii];
+            }
+        }
+
+        total += (first_digit * 10) + second_digit;
     }
 
+    printf("%d\n", total);
 
     return 0;
 }
