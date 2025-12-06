@@ -139,18 +139,88 @@ int main(int argc, char* argv[]){
     uint16_t array_length = get_array_lengths(filename);
 
     uint64_t ranges[array_length][2];
+    // uint64_t new_ranges[array_length][2];
+    uint16_t new_ranges_index = 0;
 
     fill_arrays(ranges, filename);
 
     uint64_t total = 0;
 
-    // go through the ranges and calculate the amount of ones in the range
-    for(int range = 0; range < array_length; range++){
+    uint8_t overlap = 1;
 
-        printf("%ld\n", ranges[range][1] - ranges[range][0]);
+    while(overlap){
+        overlap = 0;
+        new_ranges_index = 0;
 
-        // check for overlapping ranges and combine them.
+        // go through the ranges and check for overlapping ones
+        for(int i = 0; i < array_length; i++){
+
+            uint64_t start_range = ranges[i][0];
+            uint64_t end_range = ranges[i][1];
+
+            for(int ii = 0; ii < array_length; ii++){
+
+                // skip your own range
+                if(ii == i) continue;
+
+                if(ranges[i][0] >= ranges[ii][0] && ranges[i][0] <= ranges[ii][1]){
+                    if(ranges[ii][0] < start_range){
+                        start_range = ranges[ii][0];
+                        overlap = 1;
+                    }
+                }
+
+                if(ranges[i][1] >= ranges[ii][0] && ranges[i][1] <= ranges[ii][1]){
+                    if(ranges[ii][1] > end_range){
+                        end_range = ranges[ii][1];
+                        overlap = 1;
+                    }
+                }
+            }
+
+            ranges[new_ranges_index][0] = start_range;
+            ranges[new_ranges_index][1] = end_range;
+            new_ranges_index++;
+        }
     }
+
+
+    // go through the array to see if there are any ranges that are the same
+     for(int i = 0; i < array_length; i++){
+
+            for(int ii = 0; ii < array_length; ii++){
+                
+                // skip your own one
+                if(i == ii) continue;
+
+                if(ranges[i][0] == ranges[ii][0] && ranges[i][1] == ranges[ii][1]){
+                    ranges[ii][0] = 0;
+                    ranges[ii][1] = 0;
+                }
+            }
+     }
+
+
+    // go through the ranges and calculate the difference
+    for(int i = 0; i < array_length; i++){
+
+        if(ranges[i][0] == 0 && ranges[i][1] == 0) continue;
+
+        // the plus one is because the ranges are inclusive
+        total += ranges[i][1] - ranges[i][0] + 1;
+    
+    }
+
+    for(int i = 0; i < array_length; i++){
+        printf("%ld - %ld\n", ranges[i][0], ranges[i][1]);
+    }
+
+    printf("-------\n");
+
+    // for(int i = 0; i < array_length; i++){
+    //     printf("%ld - %ld\n", new_ranges[i][0], new_ranges[i][1]);
+    // }
+    
 
 
     printf("%ld\n", total);
