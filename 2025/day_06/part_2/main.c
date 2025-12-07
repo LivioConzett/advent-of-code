@@ -1,5 +1,5 @@
 /**
- * gcc -std=c99 -Wall -Werror
+ * gcc -std=c99 -Wall -Werror main.c -lm
  */
 
 #define _GNU_SOURCE
@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
+#include <math.h>
 
 typedef struct {
     uint16_t x;
@@ -231,6 +231,27 @@ void fill_operators(char operators[], vector_t size, const char* filename){
 
 
 /**
+ * \brief get the number of digits in the number
+ * \param number number to get digits from
+ * \return number of digits in number
+ */
+uint8_t get_number_of_digits(int number){
+
+    char string[10];
+
+    snprintf(string, 10, "%d",number);
+
+
+
+    for(int i = 0; i < 10; i++){
+        if(string[i] == 0) return i;
+    }
+
+    return 0;
+}
+
+
+/**
  * \brief main entry point
  */
 int main(int argc, char* argv[]){
@@ -270,28 +291,79 @@ int main(int argc, char* argv[]){
     // printf("\n");
 
     uint64_t total = 0;
-    uint64_t result = 0;
+    // uint64_t result = 0;
 
     // go through the arrays and calculate it all
-    for(int column = 0; column < array_size.y; column++){
+    // for(int column = 0; column < array_size.y; column++){
 
-        if(operators[column] == '+') result = 0; 
-        if(operators[column] == '*') result = 1; 
+    //     if(operators[column] == '+') result = 0; 
+    //     if(operators[column] == '*') result = 1; 
 
-        for(int row = 0; row < array_size.x-1; row++){
+    //     for(int row = 0; row < array_size.x-1; row++){
 
-            switch(operators[column]){
+    //         switch(operators[column]){
 
-                case '*':
-                    result *= numbers[(row * array_size.y) + column];
-                    break;
-                case '+':
-                    result += numbers[(row * array_size.y) + column];
-                    break;
+    //             case '*':
+    //                 result *= numbers[(row * array_size.y) + column];
+    //                 break;
+    //             case '+':
+    //                 result += numbers[(row * array_size.y) + column];
+    //                 break;
+    //         }
+    //     }
+
+    //     total += result;
+    // }
+
+
+
+    // 1) find the largest number in the column
+    // 2) see how many digits it has
+    // 3) create a new array with as many elements as the original has rows
+    // 4) fill each position in the array with the numbers divided by ten * column pos
+    // 5) calculate normal
+    // 6) ??
+    // 7) profit
+
+    for(int main_column = 0; main_column < 1; main_column++){
+
+        int largest_number = 0;
+
+        // find the largest number in the column
+        for(int row = 0; row < array_size.x - 1; row++){
+            if(numbers[(row * array_size.y) + main_column] > largest_number){
+                largest_number = numbers[(row * array_size.y) + main_column];
             }
         }
+        int number_of_digits = get_number_of_digits(largest_number);
+        printf("%d %d\n", largest_number, number_of_digits);
 
-        total += result;
+        // create an array for the numbers
+        int array[number_of_digits];
+
+        for(int i = number_of_digits - 1; i >= 0; i--){
+
+            for(int row = 0; row < array_size.x - 1; row++){
+
+                int digit = numbers[(row * array_size.y) + main_column] / pow(10, i);
+                // int num = digit * pow(10,i);
+
+                array[i] += digit * pow(10, (array_size.x -1)-row);
+
+            }
+
+
+
+        }
+
+
+        for(int i = 0; i < number_of_digits; i++){
+            printf("%d ",array[i]);
+        }
+
+        printf("\n");
+
+        
     }
 
 
