@@ -20,7 +20,7 @@ typedef struct {
  * \param filename nae of the file
  * \return a vector with the width and hight
  */
-vector_t get_array_size(const char* filename){
+vector_t get_array_size_spaces(const char* filename){
 
     FILE* file_ptr;
     file_ptr = fopen(filename, "r");
@@ -243,7 +243,7 @@ int main(int argc, char* argv[]){
 
     char* filename = argv[1];
 
-    vector_t array_size = get_array_size(filename);
+    vector_t array_size = get_array_size_spaces(filename);
 
     // create the array for the numbers
     // one row less, since the last row is the operators
